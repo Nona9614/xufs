@@ -17,7 +17,7 @@ Based on a [`predicate`](https://stackoverflow.com/questions/1344015/what-is-a-p
 
 throu
 ---------------------------------
-Iterates recursively given throu the folder names and executes a `watcher` every time it passes a file.
+Iterates recursively given throu the folder names and upon the observe option executes a `watcher` every time it passes `files`, `folders` or `both`.
 
 read
 ---------------------------------

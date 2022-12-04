@@ -57,14 +57,27 @@ export async function search(predicate: SearchPredicate, ...folders: string[]) {
   return found;
 }
 
-type ThrouWatcher = (pathname: string) => void
-
-export async function _throu(folder: string, watcher: ThrouWatcher) {
-  const dirs = await readdir(folder);
+type ThrouWatcher = (pathname: string) => Promise<void> | void
+type ThrouObserve = 'files' | 'folders' | 'both';
+export async function _throu(
+  pathname: string,
+  watcher: ThrouWatcher,
+  observe: ThrouObserve
+) {
+  const dirs = await readdir(pathname);
   for (let i = 0; i < dirs.length; i++) {
-    const dir = path.join(folder, dirs[i]);
+    const dir = path.join(pathname, dirs[i]);
+    const _isFolder = isFolder(dir);
+    if (
+      (observe === "files" && !_isFolder) ||
+      (observe === "folders" && _isFolder) ||
+      observe === "both"
+    ) {
+      await watcher(pathname);
+    }
+
     // Recursively resolve folders
-    if (isFolder(dir)) await _throu(dir, watcher);
+    if (_isFolder) await _throu(dir, watcher, observe);
   }
 }
 
@@ -72,11 +85,17 @@ export async function _throu(folder: string, watcher: ThrouWatcher) {
  * Iterates recursively given throu the folder names
  * and executes the `watcher` every time it passes a file
  * @param folders The folders to search
- * @param watcher Watches for each iteration
+ * @param context
+ * @param context.watcher Watches for each iteration
+ * @default context Observes both files and folders
  */
- export async function throu(watcher: ThrouWatcher, ...folders: string[]) {
+ export async function throu(context: {
+  watcher: ThrouWatcher,
+  observe?: ThrouObserve
+ }, ...folders: string[]) {
+  const observe = context.observe ? context.observe : 'both';
   for (const folder of folders) {
-    await _throu(folder, watcher);
+    await _throu(folder, context.watcher, observe);
   }
 }
 
