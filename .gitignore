@@ -1,0 +1,10 @@
+# Visual Studio Code Settings
+.vscode
+
+# Node Modules
+node_modules
+
+# Deployment
+lib
+dist
+build

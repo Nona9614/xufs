@@ -1,0 +1,29 @@
+{
+  "include": [ "src/**/*.ts" ],
+  "exclude": ["node_modules", "**/tests", "**/*.spec.ts"],
+  "compilerOptions": {
+    "strict": true,
+    "module": "EsNext",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    // Types should go into this directory.
+    // Removing this would place the .d.ts files
+    // next to the .js files
+    "outDir": "lib",
+    // Tells TypeScript to read JS files, as
+    // normally they are ignored as source files
+    "allowJs": true,
+    // Generate d.ts files
+    "declaration": true,
+    "lib": ["ESNext"]
+  },
+  "files": [
+    "src/files.ts"
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "Node16",
+    },
+    "files": true
+  }
+}
