@@ -59,7 +59,7 @@ export async function search(predicate: SearchPredicate, ...folders: string[]) {
 
 type ThrouWatcher = (pathname: string) => Promise<void> | void
 type ThrouObserve = 'files' | 'folders' | 'both';
-export async function _throu(
+async function _throu(
   pathname: string,
   watcher: ThrouWatcher,
   observe: ThrouObserve
@@ -73,7 +73,7 @@ export async function _throu(
       (observe === "folders" && _isFolder) ||
       observe === "both"
     ) {
-      await watcher(pathname);
+      await watcher(dir);
     }
 
     // Recursively resolve folders
