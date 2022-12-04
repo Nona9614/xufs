@@ -57,6 +57,29 @@ export async function search(predicate: SearchPredicate, ...folders: string[]) {
   return found;
 }
 
+type ThrouWatcher = (pathname: string) => void
+
+export async function _throu(folder: string, watcher: ThrouWatcher) {
+  const dirs = await readdir(folder);
+  for (let i = 0; i < dirs.length; i++) {
+    const dir = path.join(folder, dirs[i]);
+    // Recursively resolve folders
+    if (isFolder(dir)) await _throu(dir, watcher);
+  }
+}
+
+/**
+ * Iterates recursively given throu the folder names
+ * and executes the `watcher` every time it passes a file
+ * @param folders The folders to search
+ * @param watcher Watches for each iteration
+ */
+ export async function throu(watcher: ThrouWatcher, ...folders: string[]) {
+  for (const folder of folders) {
+    await _throu(folder, watcher);
+  }
+}
+
 function _read(filename: string, encoding?: BufferEncoding) {
   return new Promise<any>((resolve, reject) => {
       if (!fs.existsSync(filename)) reject(Error(`File does not exists:\n${FgExIchor}${filename}${ExDefault}`));

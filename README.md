@@ -15,6 +15,10 @@ search
 ---------------------------------
 Based on a [`predicate`](https://stackoverflow.com/questions/1344015/what-is-a-predicate) returns a `string` Array containing all __matches__.
 
+throu
+---------------------------------
+Iterates recursively given throu the folder names and executes a `watcher` every time it passes a file.
+
 read
 ---------------------------------
 Reads the contents from a file and returns it as a `string` object.
