@@ -17,7 +17,11 @@ Based on a [`predicate`](https://stackoverflow.com/questions/1344015/what-is-a-p
 
 read
 ---------------------------------
-Reads the contents from a file and returns it as a `Buffer` object.
+Reads the contents from a file and returns it as a `string` object.
+
+extract
+---------------------------------
+Extracts the contents from a file and returns it as a `Buffer` object.
 
 mkdir
 ---------------------------------

@@ -57,23 +57,34 @@ export async function search(predicate: SearchPredicate, ...folders: string[]) {
   return found;
 }
 
-function _read(filename: string) {
-  return new Promise<Buffer>((resolve, reject) => {
+function _read(filename: string, encoding?: BufferEncoding) {
+  return new Promise<any>((resolve, reject) => {
       if (!fs.existsSync(filename)) reject(Error(`File does not exists:\n${FgExIchor}${filename}${ExDefault}`));
       else {
-          fs.readFile(filename, (error, data) => {
+          fs.readFile(filename, {
+            encoding,
+          }, (error, data) => {
               if (error) reject(error);
               else resolve(data);
-          });                
+          });      
       }
   });
 }
 /**
- * Reads the content from a file
+ * Reads the content from a file as `String`
  * @param filename The file to be readed
  */
-export async function read(filename: string) {
-  const content = await _read(filename);
+export async function read(filename: string, encoding: BufferEncoding = 'utf-8') {
+  const content = await _read(filename, encoding) as string
+  return content;
+}
+
+/**
+ * Extracts the content from a file as `Buffer`
+ * @param filename The file to be readed
+ */
+ export async function extract(filename: string) {
+  const content = await _read(filename) as Buffer;
   return content;
 }
 
