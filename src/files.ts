@@ -208,7 +208,7 @@ export function destroy(filename: string) {
   })
 }
 
-export function _empty(folder: string) {
+function _empty(folder: string) {
   return new Promise<void>((resolve, reject) => {
       fs.rm(folder, {
           recursive: true
