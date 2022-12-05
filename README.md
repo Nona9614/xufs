@@ -7,10 +7,6 @@ assertf
 ---------------------------------
 Throws an `error` when a passed file or files do not exists
 
-readdir
----------------------------------
-Returns all tthe directories and subdirectories from a folder as a `string` Array.
-
 search
 ---------------------------------
 Based on a [`predicate`](https://stackoverflow.com/questions/1344015/what-is-a-predicate) returns a `string` Array containing all __matches__.

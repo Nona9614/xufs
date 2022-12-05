@@ -18,22 +18,9 @@ export function assertf(...filenames: string[]) {
   }
 }
 
-/**
- * Returns the directories from the folder
- * @param folder The folder to get the directories
- */
-export function readdir(folder: string) {
-  return new Promise<string[]>((resolve, reject) => {
-    fs.readdir(folder, function (error, files) {
-      if (error) reject(error);
-      else resolve(files);
-    });
-  });
-}
-
 type SearchPredicate = (pathname: string) => boolean;
 async function _search(folder: string, predicate: SearchPredicate, found: string[] = []) {
-  const dirs = await readdir(folder);
+  const dirs = fs.readdirSync(folder);
   for (let i = 0; i < dirs.length; i++) {
     const dir = path.join(folder, dirs[i]);
     const isValid = predicate(dir);
@@ -64,7 +51,7 @@ async function _throu(
   watcher: ThrouWatcher,
   observe: ThrouObserve
 ) {
-  const dirs = await readdir(pathname);
+  const dirs = fs.readdirSync(pathname);
   for (let i = 0; i < dirs.length; i++) {
     const dir = path.join(pathname, dirs[i]);
     const _isFolder = isFolder(dir);
@@ -216,7 +203,7 @@ async function _copy(from: string, to: string, append = false, fallback = "copy"
 
   if (isFromFolder && isToFolder) {
       await mkdir(to);
-      const dirs = await readdir(from);
+      const dirs = fs.readdirSync(from);
       for (const dir of dirs) {
           await _copy(path.join(from, dir), path.join(to, dir), append, _fallback, recursions + 1);
       }
