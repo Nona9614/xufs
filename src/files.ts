@@ -5,6 +5,7 @@ import * as process from "process";
 import lienzo from "./lienzo";
 
 import { FgExIchor, ExDefault } from "node-lienzo";
+import { Pipe } from "./types";
 
 export const isFolder = (value: string) => !value.includes(".");
 
@@ -393,4 +394,24 @@ export async function empty(folder: string, create: boolean) {
 /** Resolves folders and uses as base the current working working directory */
 export function resolve(...paths: string[]) {
   return path.resolve.apply(path, [process.cwd(), ...paths]);
+}
+
+export function pipe<R extends any>(...funcs: Pipe<true, R>[]) {
+  return async function (startValue: R) {
+    let computed = startValue;
+    for (const func of funcs) {
+      computed = await func(computed);
+    }
+    return computed;
+  };
+}
+
+export function pipeSync<R extends any>(...funcs: Pipe<false, R>[]) {
+  return function (startValue: R) {
+    let computed = startValue;
+    for (const func of funcs) {
+      computed = func(computed);
+    }
+    return computed;
+  };
 }
