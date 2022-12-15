@@ -1,9 +1,18 @@
 {
   "name": "xufs",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "A handy library to access files.",
-  "main": "files.js",
-  "types": "files.d.ts",
+  "type": "module",
+  "main": "cjs/index.cjs",
+  "module": "esm/index.mjs",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.mjs",
+      "require": "./cjs/index.cjs",
+      "types": "./index.d.ts"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Nona9614/xufs"
@@ -24,7 +33,7 @@
     "node-lienzo": "^1.2.2"
   },
   "scripts": {
-    "bundle": "rollup --config",
+    "bundle": "node rollup.config.mjs",
     "deploy": "rimraf lib && npm run bundle"
   },
   "author": "nona9614",

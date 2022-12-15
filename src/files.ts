@@ -16,7 +16,7 @@ export function assertf(...filenames: string[]) {
   for (const filename of filenames) {
     if (!fs.existsSync(filename))
       throw new Error(
-        `File does not exists:\n${FgExIchor}${filename}${ExDefault}`
+        `File does not exists:\n${FgExIchor}${filename}${ExDefault}`,
       );
   }
 }
@@ -25,7 +25,7 @@ type SearchPredicate = (pathname: string) => boolean;
 async function _search(
   folder: string,
   predicate: SearchPredicate,
-  found: string[] = []
+  found: string[] = [],
 ) {
   const dirs = fs.readdirSync(folder);
   for (let i = 0; i < dirs.length; i++) {
@@ -56,7 +56,7 @@ type ThrouObserve = "files" | "folders" | "both";
 async function _throu(
   pathname: string,
   watcher: ThrouWatcher,
-  observe: ThrouObserve
+  observe: ThrouObserve,
 ) {
   const dirs = fs.readdirSync(pathname);
   for (let i = 0; i < dirs.length; i++) {
@@ -79,7 +79,7 @@ type ThrouWatcherSync = (pathname: string) => void;
 async function _throuSync(
   pathname: string,
   watcher: ThrouWatcherSync,
-  observe: ThrouObserve
+  observe: ThrouObserve,
 ) {
   const dirs = fs.readdirSync(pathname);
   for (let i = 0; i < dirs.length; i++) {
@@ -144,7 +144,7 @@ function _read(filename: string, encoding?: BufferEncoding) {
   return new Promise<any>((resolve, reject) => {
     if (!fs.existsSync(filename))
       reject(
-        Error(`File does not exists:\n${FgExIchor}${filename}${ExDefault}`)
+        Error(`File does not exists:\n${FgExIchor}${filename}${ExDefault}`),
       );
     else {
       fs.readFile(
@@ -155,7 +155,7 @@ function _read(filename: string, encoding?: BufferEncoding) {
         (error, data) => {
           if (error) reject(error);
           else resolve(data);
-        }
+        },
       );
     }
   });
@@ -166,7 +166,7 @@ function _read(filename: string, encoding?: BufferEncoding) {
  */
 export async function read(
   filename: string,
-  encoding: BufferEncoding = "utf-8"
+  encoding: BufferEncoding = "utf-8",
 ) {
   const content = (await _read(filename, encoding)) as string;
   return content;
@@ -194,7 +194,16 @@ export function mkdir(pathname: string) {
       fs.mkdir(route, (error) => {
         if (error) reject(error);
         else {
-          lienzo.function("Folder created").line().string(route).line().print();
+          lienzo
+            .white("➜")
+            .space(2)
+            .function("Folder")
+            .space()
+            .white("created")
+            .line()
+            .string(route)
+            .line()
+            .print();
           resolve();
         }
       });
@@ -211,7 +220,16 @@ export function mkdirSync(pathname: string) {
   const route = isFolder(pathname) ? pathname : path.dirname(pathname);
   if (fs.existsSync(route)) return;
   fs.mkdirSync(route);
-  lienzo.function("Folder created").line().string(route).line().print();
+  lienzo
+    .white("➜")
+    .space(2)
+    .function("Folder")
+    .space()
+    .white("created")
+    .line()
+    .string(route)
+    .line()
+    .print();
 }
 
 function _write(filename: string, data: string | Buffer, append = false) {
@@ -226,10 +244,19 @@ function _write(filename: string, data: string | Buffer, append = false) {
       (error) => {
         if (error) reject(error);
         else {
-          lienzo.null("File created").line().string(filename).line().print();
+          lienzo
+            .white("➜")
+            .space(2)
+            .null("File")
+            .space()
+            .white("content written to disk")
+            .line()
+            .string(filename)
+            .line()
+            .print();
           resolve();
         }
-      }
+      },
     );
   });
 }
@@ -237,7 +264,7 @@ function _write(filename: string, data: string | Buffer, append = false) {
 export function writeSync(
   filename: string,
   data: string | Buffer,
-  append: boolean
+  append: boolean,
 ) {
   mkdirSync(filename);
   fs.writeFileSync(filename, data, {
@@ -253,7 +280,7 @@ export function readSync(filename: string) {
 export async function write(
   filename: string,
   data: string | Buffer,
-  append = false
+  append: boolean = false,
 ) {
   await mkdir(filename);
   await _write(filename, data, append);
@@ -264,19 +291,19 @@ async function _copy(
   to: string,
   append = false,
   fallback = "copy",
-  recursions = 0
+  recursions = 0,
 ) {
   const isFromFolder = isFolder(from);
   const isToFolder = isFolder(to);
 
   if (recursions >= 50)
     throw new Error(
-      `${recursions} recursions reached, process stop before memory leak`
+      `${recursions} recursions reached, process stop before memory leak`,
     );
 
   if (!(from && to))
     throw new Error(
-      `Not valid values input paths for copy:\nfrom:\n${from}\nto:\n${to}\n`
+      `Not valid values input paths for copy:\nfrom:\n${from}\nto:\n${to}\n`,
     );
   const _fallback = path.isAbsolute(fallback)
     ? fallback
@@ -291,7 +318,7 @@ async function _copy(
         path.join(to, dir),
         append,
         _fallback,
-        recursions + 1
+        recursions + 1,
       );
     }
   } else if (!isFromFolder && !isToFolder) {
@@ -305,7 +332,7 @@ async function _copy(
     await _write(path.resolve(_to, name), data, append);
   } else if (isFromFolder && !isToFolder) {
     throw Error(
-      `If 'from' is a folder, 'to' cannot be a file:\nfrom:\n${from}\nto:\n${to}\n`
+      `If 'from' is a folder, 'to' cannot be a file:\nfrom:\n${from}\nto:\n${to}\n`,
     );
   }
 }
@@ -321,7 +348,7 @@ export function copy(
   from: string,
   to: string,
   append = false,
-  fallback = "copy"
+  fallback = "copy",
 ) {
   return _copy(from, to, append, fallback);
 }
@@ -341,7 +368,7 @@ export function destroy(filename: string) {
         if (!fs.existsSync(filename)) resolve();
         else if (error) reject(error);
         else resolve();
-      }
+      },
     );
   });
 }
@@ -357,7 +384,7 @@ function _empty(folder: string) {
         if (!fs.existsSync(folder)) resolve();
         else if (error) reject(error);
         else resolve();
-      }
+      },
     );
   });
 }
@@ -369,7 +396,7 @@ function _empty(folder: string) {
 export function findSync(
   route: string,
   filename: string,
-  extensions: string[]
+  extensions: string[],
 ) {
   const tries: string[] = [];
   for (const extension of extensions) {

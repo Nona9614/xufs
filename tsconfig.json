@@ -1,5 +1,5 @@
 {
-  "include": [ "src/**/*.ts" ],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/tests", "**/*.spec.ts"],
   "compilerOptions": {
     "strict": true,
@@ -14,16 +14,7 @@
     // normally they are ignored as source files
     "allowJs": true,
     // Generate d.ts files
-    "declaration": true,
-    "lib": ["ESNext"]
+    "declaration": true
   },
-  "files": [
-    "src/files.ts"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "Node16",
-    },
-    "files": true
-  }
+  "files": ["./src/files.ts"]
 }
